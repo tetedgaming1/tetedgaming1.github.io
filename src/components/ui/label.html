@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static Label</title>
+<style>
+  body { font-family: sans-serif; margin: 2rem; }
+
+  .label {
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;    /* font-medium */
+    line-height: 1;      /* leading-none */
+    display: inline-block;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Disabled styling if associated input is disabled */
+  input:disabled + .label,
+  input:disabled ~ .label,
+  .label[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<input type="text" id="name" />
+<label for="name" class="label">Name</label>
+<br><br>
+<input type="text" id="email" disabled />
+<label for="email" class="label">Email (disabled)</label>
+
+</body>
+</html>
