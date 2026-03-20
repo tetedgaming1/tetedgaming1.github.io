@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alert Dialog Example</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    padding: 20px;
+  }
+
+  /* Overlay */
+  #alertOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    z-index: 1000;
+  }
+
+  /* Modal content */
+  #alertDialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    display: none;
+    z-index: 1001;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+
+  #alertDialog h2 {
+    margin-top: 0;
+    font-size: 1.2em;
+  }
+
+  #alertDialog p {
+    font-size: 0.9em;
+    margin-bottom: 20px;
+  }
+
+  /* Footer buttons */
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+  }
+
+  .btn-primary {
+    background-color: #38bdf8;
+    color: #0f172a;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    border: 1px solid #38bdf8;
+    color: #38bdf8;
+  }
+</style>
+</head>
+<body>
+
+<h2>Alert Dialog Demo</h2>
+
+<!-- Trigger button -->
+<button id="openDialog" class="btn btn-primary">Open Alert</button>
+
+<!-- Overlay -->
+<div id="alertOverlay"></div>
+
+<!-- Modal content -->
+<div id="alertDialog">
+  <h2 id="alertTitle">Alert Title</h2>
+  <p id="alertDescription">This is the description of the alert dialog.</p>
+  <div class="modal-footer">
+    <button id="cancelBtn" class="btn btn-outline">Cancel</button>
+    <button id="actionBtn" class="btn btn-primary">Confirm</button>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById('openDialog');
+  const overlay = document.getElementById('alertOverlay');
+  const dialog = document.getElementById('alertDialog');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const actionBtn = document.getElementById('actionBtn');
+
+  function openDialog() {
+    overlay.style.display = 'block';
+    dialog.style.display = 'block';
+  }
+
+  function closeDialog() {
+    overlay.style.display = 'none';
+    dialog.style.display = 'none';
+  }
+
+  openBtn.addEventListener('click', openDialog);
+  cancelBtn.addEventListener('click', closeDialog);
+  overlay.addEventListener('click', closeDialog);
+
+  // Example action
+  actionBtn.addEventListener('click', () => {
+    alert("Confirmed!");
+    closeDialog();
+  });
+</script>
+
+</body>
+</html>
