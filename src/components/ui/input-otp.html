@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static OTP Input</title>
+<style>
+  body { font-family: sans-serif; margin: 2rem; }
+  .otp-container { display: flex; gap: 0.5rem; }
+  .otp-input {
+    width: 2.25rem; height: 2.25rem;
+    text-align: center; font-size: 1rem;
+    border: 1px solid #d1d5db; border-radius: 0.25rem;
+    outline: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: border 0.2s, box-shadow 0.2s;
+  }
+  .otp-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 1px #3b82f6; z-index: 10; }
+  .otp-separator { display: flex; align-items: center; justify-content: center; width: 1rem; font-weight: bold; }
+  @keyframes caret-blink { 0%, 50%, 100% { opacity: 1; } 25%, 75% { opacity: 0; } }
+  .fake-caret { position: absolute; width: 1px; height: 1rem; background: #111; animation: caret-blink 1s step-start infinite; left: 50%; transform: translateX(-50%); }
+  .otp-wrapper { position: relative; }
+</style>
+</head>
+<body>
+
+<div class="otp-container" id="otpContainer">
+  <div class="otp-wrapper"><input type="text" maxlength="1" class="otp-input" /><div class="fake-caret"></div></div>
+  <div class="otp-wrapper"><input type="text" maxlength="1" class="otp-input" /><div class="fake-caret"></div></div>
+  <div class="otp-separator">-</div>
+  <div class="otp-wrapper"><input type="text" maxlength="1" class="otp-input" /><div class="fake-caret"></div></div>
+  <div class="otp-wrapper"><input type="text" maxlength="1" class="otp-input" /><div class="fake-caret"></div></div>
+</div>
+
+<script>
+  const inputs = document.querySelectorAll('.otp-input');
+  inputs.forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      const val = e.target.value;
+      if(val.length === 1 && idx < inputs.length -1) inputs[idx+1].focus();
+    });
+    input.addEventListener('keydown', (e) => {
+      if(e.key === "Backspace" && !input.value && idx > 0) inputs[idx-1].focus();
+    });
+    input.addEventListener('focus', () => {
+      document.querySelectorAll('.fake-caret').forEach(c => c.style.display = 'none');
+      input.nextElementSibling.style.display = 'block';
+    });
+    input.addEventListener('blur', () => {
+      input.nextElementSibling.style.display = 'none';
+    });
+  });
+
+  // Initialize first input caret visible
+  document.querySelector('.otp-input').nextElementSibling.style.display = 'block';
+</script>
+
+</body>
+</html>
