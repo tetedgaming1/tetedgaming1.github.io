@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Diplomacy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- React + ReactDOM -->
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<!-- Babel for JSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- date-fns -->
+<script src="https://cdn.jsdelivr.net/npm/date-fns@2.30.0/dist/date-fns.min.js"></script>
+<!-- Lucide Icons -->
+<script src="https://cdn.jsdelivr.net/npm/lucide-react@0.276.0/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-slate-50 p-6">
+<div id="root"></div>
+
+<script type="text/babel">
+
+const { useState } = React;
+const { format } = dateFns;
+const { Handshake, ShieldCheck, Swords, Flag, ArrowRightLeft, Pencil, Trash2 } = lucideReact;
+
+const relationConfig = {
+  ally: { color: 'bg-green-100 text-green-800 border border-green-200', icon: ShieldCheck },
+  enemy: { color: 'bg-red-100 text-red-800 border border-red-200', icon: Swords },
+  neutral: { color: 'bg-gray-100 text-gray-800 border border-gray-200', icon: Flag },
+  trade_partner: { color: 'bg-blue-100 text-blue-800 border border-blue-200', icon: ArrowRightLeft },
+  vassal: { color: 'bg-yellow-100 text-yellow-800 border border-yellow-200', icon: Flag },
+  overlord: { color: 'bg-purple-100 text-purple-800 border border-purple-200', icon: Flag },
+};
+
+function Diplomacy() {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ nation_name: '', relation: 'neutral', treaty_name: '', details: '', signed_date: '', status: 'active' });
+
+  // Dummy alliances data
+  const alliances = [
+    { id:1, nation_name:'AlliedTown', relation:'ally', treaty_name:'Trade Pact', details:'Mutual aid agreement', signed_date:'2023-02-15', status:'active'},
+    { id:2, nation_name:'EnemyLand', relation:'enemy', treaty_name:'Border Dispute', details:'No trade allowed', signed_date:'2022-10-10', status:'broken'},
+    { id:3, nation_name:'NeutralVille', relation:'neutral', treaty_name:'', details:'', signed_date:'', status:'active'},
+    { id:4, nation_name:'TradeCity', relation:'trade_partner', treaty_name:'Commerce Deal', details:'Exchanging goods', signed_date:'2023-01-01', status:'active'}
+  ];
+
+  const grouped = {
+    ally: alliances.filter(a => a.relation === 'ally'),
+    enemy: alliances.filter(a => a.relation === 'enemy'),
+    trade_partner: alliances.filter(a => a.relation === 'trade_partner'),
+    other: alliances.filter(a => !['ally','enemy','trade_partner'].includes(a.relation)),
+  };
+
+  const handleEdit = (a) => {
+    setEditing(a);
+    setForm({...a});
+    setDialogOpen(true);
+  };
+
+  const resetForm = () => {
+    setForm({ nation_name: '', relation: 'neutral', treaty_name: '', details: '', signed_date: '', status: 'active' });
+    setEditing(null);
+    setDialogOpen(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if(editing) {
+      alert('Update simulated: ' + JSON.stringify(form));
+    } else {
+      alert('Create simulated: ' + JSON.stringify(form));
+    }
+    resetForm();
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-wide">Diplomacy</h1>
+          <p className="text-gray-500 mt-1">Manage foreign relations</p>
+        </div>
+        <button onClick={() => setDialogOpen(true)} className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2">
+          <Plus className="w-4 h-4" /> Add Relation
+        </button>
+      </div>
+
+      {dialogOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
+          <div className="bg-white p-6 rounded w-96">
+            <h2 className="text-lg font-bold mb-4">{editing ? 'Edit Relation' : 'New Relation'}</h2>
+            <form className="space-y-3" onSubmit={handleSubmit}>
+              <div>
+                <label className="block text-sm font-medium">Nation Name</label>
+                <input className="w-full border rounded px-2 py-1" value={form.nation_name} onChange={e=>setForm({...form,nation_name:e.target.value})} required/>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Relation</label>
+                <select className="w-full border rounded px-2 py-1" value={form.relation} onChange={e=>setForm({...form,relation:e.target.value})}>
+                  {Object.keys(relationConfig).map(r=><option key={r} value={r}>{r.replace(/_/g,' ')}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Treaty Name</label>
+                <input className="w-full border rounded px-2 py-1" value={form.treaty_name} onChange={e=>setForm({...form,treaty_name:e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Status</label>
+                <select className="w-full border rounded px-2 py-1" value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>
+                  <option value="active">Active</option>
+                  <option value="expired">Expired</option>
+                  <option value="broken">Broken</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Signed Date</label>
+                <input type="date" className="w-full border rounded px-2 py-1" value={form.signed_date} onChange={e=>setForm({...form,signed_date:e.target.value})} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Details</label>
+                <textarea className="w-full border rounded px-2 py-1" value={form.details} onChange={e=>setForm({...form,details:e.target.value})}></textarea>
+              </div>
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={resetForm} className="px-3 py-1 border rounded">Cancel</button>
+                <button type="submit" className="px-3 py-1 bg-blue-500 text-white rounded">{editing ? 'Update' : 'Create'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        {Object.entries(grouped).filter(([,items])=>items.length>0).map(([key, items])=>(
+          <div key={key}>
+            <h3 className="text-sm font-semibold uppercase text-gray-500 mb-2">{key.replace(/_/g,' ')}s ({items.length})</h3>
+            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {items.map(a=>{
+                const config = relationConfig[a.relation]||relationConfig.neutral;
+                const Icon = config.icon;
+                return (
+                  <div key={a.id} className="border rounded p-4 hover:border-blue-300 transition">
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded ${config.color}`}><Icon className="w-4 h-4"/></div>
+                        <div>
+                          <h4 className="font-semibold">{a.nation_name}</h4>
+                          {a.treaty_name && <p className="text-xs text-gray-500">{a.treaty_name}</p>}
+                        </div>
+                      </div>
+                      <div className="flex gap-1">
+                        <button className="text-gray-500"><Pencil className="w-4 h-4" onClick={()=>handleEdit(a)}/></button>
+                        <button className="text-red-600"><Trash2 className="w-4 h-4" onClick={()=>alert('Delete simulated')}/></button>
+                      </div>
+                    </div>
+                    {a.details && <p className="text-xs text-gray-500 mt-2">{a.details}</p>}
+                    {a.signed_date && <p className="text-xs text-gray-400 mt-1">Since {format(new Date(a.signed_date),'MMM yyyy')}</p>}
+                    <span className={`text-xs px-2 py-0.5 rounded ${a.status==='active'?'bg-green-100 text-green-800 border border-green-200':a.status==='broken'?'bg-red-100 text-red-800 border border-red-200':'bg-gray-100 text-gray-800 border border-gray-200'}`}>{a.status}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Diplomacy/>);
+
+</script>
+</body>
+</html>
