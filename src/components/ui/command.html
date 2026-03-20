@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static Checkbox</title>
+<style>
+  .checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  .checkbox-container input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid #3b82f6;
+    border-radius: 0.125rem;
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    outline: none;
+  }
+  .checkbox-container input[type="checkbox"]:focus-visible {
+    box-shadow: 0 0 0 1px #3b82f6;
+  }
+  .checkbox-container input[type="checkbox"]:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+  .checkbox-container input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: white;
+    clip-path: polygon(14% 44%, 0% 61%, 50% 100%, 100% 14%, 86% 0%, 43% 62%);
+  }
+  .checkbox-label {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    user-select: none;
+  }
+  .checkbox-container input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<label class="checkbox-container">
+  <input type="checkbox" id="checkbox1">
+  <span class="checkbox-label">Check me</span>
+</label>
+
+</body>
+</html>
