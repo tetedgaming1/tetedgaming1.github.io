@@ -1,0 +1,45 @@
+{
+  "name": "Law",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the law or announcement"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full text of the law or announcement"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "law",
+        "decree",
+        "announcement",
+        "guideline"
+      ],
+      "default": "law"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "repealed",
+        "draft"
+      ],
+      "default": "active"
+    },
+    "enacted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who wrote this"
+    }
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}
