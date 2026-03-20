@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Treasury Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons via Skypack -->
+  <script type="module">
+    import * as lucide from 'https://cdn.skypack.dev/lucide-react';
+    window.lucide = lucide;
+  </script>
+</head>
+<body class="bg-gray-50 p-6 font-sans">
+
+<div id="root"></div>
+
+<!-- React and ReactDOM CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+<script type="text/javascript">
+  const { useState } = React;
+  const { Coins, Plus, TrendingUp, TrendingDown, Trash2 } = window.lucide;
+
+  function StatCard({ label, value, icon: Icon, accent }) {
+    return React.createElement('div', { className: `bg-white p-4 rounded-lg shadow flex items-center gap-3 ${accent ? 'border-l-4 border-green-500' : ''}` },
+      React.createElement(Icon, { className: 'w-6 h-6 text-gray-700' }),
+      React.createElement('div', null,
+        React.createElement('p', { className: 'text-sm text-gray-500' }, label),
+        React.createElement('p', { className: 'text-xl font-bold' }, value)
+      )
+    );
+  }
+
+  function TreasuryApp() {
+    const [transactions, setTransactions] = useState([
+      { id: 1, type: 'income', category: 'tax', amount: 10000, description: 'Town tax', related_town: 'Ironhaven', date: '2024-03-10' },
+      { id: 2, type: 'expense', category: 'military', amount: 3000, description: 'Army wages', related_town: 'Stormwatch', date: '2024-03-12' },
+    ]);
+
+    const [form, setForm] = useState({ type: 'income', category: 'other', amount: 0, description: '', related_town: '', date: '' });
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const categories = ['tax','trade','war_reparations','donation','construction','military','diplomacy','other'];
+    const towns = ['Ironhaven','Stormwatch','Oakdale'];
+
+    const totalIncome = transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+    const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+    const balance = totalIncome - totalExpenses;
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      setTransactions([...transactions, { ...form, id: Date.now() }]);
+      setDialogOpen(false);
+      setForm({ type: 'income', category: 'other', amount: 0, description: '', related_town: '', date: '' });
+    };
+
+    const handleDelete = (id) => setTransactions(transactions.filter(t => t.id !== id));
+
+    return React.createElement('div', { className: 'space-y-6' },
+      React.createElement('h1', { className: 'text-3xl font-bold' }, 'Treasury'),
+
+      React.createElement('button', { className: 'flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded', onClick: () => setDialogOpen(true) },
+        React.createElement(Plus, { className: 'w-4 h-4' }),
+        'Record Transaction'
+      ),
+
+      dialogOpen && React.createElement('form', { onSubmit: handleSubmit, className: 'bg-white p-4 rounded shadow space-y-3' },
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement('select', { value: form.type, onChange: e => setForm({...form, type: e.target.value}) },
+            React.createElement('option', { value: 'income' }, 'Income'),
+            React.createElement('option', { value: 'expense' }, 'Expense')
+          ),
+          React.createElement('input', { type: 'number', value: form.amount, onChange: e => setForm({...form, amount: +e.target.value}), placeholder: 'Amount', required: true })
+        ),
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement('select', { value: form.category, onChange: e => setForm({...form, category: e.target.value}) },
+            categories.map(c => React.createElement('option', { key: c, value: c }, c.replace(/_/g,' ')))
+          ),
+          React.createElement('select', { value: form.related_town, onChange: e => setForm({...form, related_town: e.target.value}) },
+            React.createElement('option', { value: '' }, 'Related Town (optional)'),
+            towns.map(t => React.createElement('option', { key: t, value: t }, t))
+          )
+        ),
+        React.createElement('input', { type: 'date', value: form.date, onChange: e => setForm({...form, date: e.target.value}) }),
+        React.createElement('input', { type: 'text', placeholder: 'Description', value: form.description, onChange: e => setForm({...form, description: e.target.value}) }),
+        React.createElement('div', { className: 'flex gap-2' },
+          React.createElement('button', { type: 'submit', className: 'bg-green-500 text-white px-2 py-1 rounded' }, 'Save'),
+          React.createElement('button', { type: 'button', className: 'bg-gray-300 px-2 py-1 rounded', onClick: () => setDialogOpen(false) }, 'Cancel')
+        )
+      ),
+
+      React.createElement('div', { className: 'grid grid-cols-1 sm:grid-cols-3 gap-4' },
+        React.createElement(StatCard, { label: 'Total Income', value: totalIncome + 'g', icon: TrendingUp }),
+        React.createElement(StatCard, { label: 'Total Expenses', value: totalExpenses + 'g', icon: TrendingDown }),
+        React.createElement(StatCard, { label: 'Net Balance', value: balance + 'g', icon: Coins, accent: true })
+      ),
+
+      React.createElement('div', { className: 'space-y-2' },
+        transactions.map(tx =>
+          React.createElement('div', { key: tx.id, className: 'flex justify-between bg-white p-3 rounded shadow items-center' },
+            React.createElement('div', { className: 'flex gap-2 items-center' },
+              React.createElement('div', { className: `w-8 h-8 flex items-center justify-center rounded ${tx.type==='income'?'bg-green-100':'bg-red-100'}` },
+                tx.type==='income'?React.createElement(TrendingUp,{className:'w-4 h-4 text-green-700'}):React.createElement(TrendingDown,{className:'w-4 h-4 text-red-700'})
+              ),
+              React.createElement('div', null,
+                React.createElement('p', { className: 'font-medium' }, tx.description || 'No description'),
+                React.createElement('span', { className: 'text-xs text-gray-500' }, tx.category.replace(/_/g,' '), tx.related_town ? ' · '+tx.related_town : '', tx.date ? ' · '+tx.date : '')
+              )
+            ),
+            React.createElement('div', { className: 'flex gap-2 items-center' },
+              React.createElement('span', { className: tx.type==='income'?'text-green-700':'text-red-700 font-semibold' }, (tx.type==='income'?'+':'-')+tx.amount+'g'),
+              React.createElement('button', { onClick: () => handleDelete(tx.id) },
+                React.createElement(Trash2, { className: 'w-4 h-4 text-red-700' })
+              )
+            )
+          )
+        )
+      )
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(TreasuryApp));
+</script>
+
+</body>
+</html>
