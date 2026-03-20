@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Example</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 2rem;
+    background-color: #f9fafb;
+  }
+
+  /* Switch container */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 3rem; /* equivalent to w-9 */
+    height: 1.25rem; /* equivalent to h-5 */
+    background-color: #e5e7eb; /* unchecked color */
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .switch.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Thumb */
+  .switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1rem; /* 4 */
+    height: 1rem;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s, background-color 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* Checked state */
+  .switch.checked {
+    background-color: #3b82f6; /* primary color */
+  }
+
+  .switch.checked .switch-thumb {
+    transform: translateX(1.5rem); /* moves thumb to the right */
+  }
+</style>
+</head>
+<body>
+
+<h2>Custom Switch Component</h2>
+
+<label class="switch" id="mySwitch">
+  <span class="switch-thumb"></span>
+</label>
+
+<script>
+  const switchEl = document.getElementById('mySwitch');
+
+  switchEl.addEventListener('click', () => {
+    if (switchEl.classList.contains('disabled')) return;
+    switchEl.classList.toggle('checked');
+  });
+
+  // Example: disable switch after 10 seconds
+  // setTimeout(() => switchEl.classList.add('disabled'), 10000);
+</script>
+
+</body>
+</html>
