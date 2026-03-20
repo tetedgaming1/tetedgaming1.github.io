@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static Drawer</title>
+<style>
+  body { font-family: sans-serif; margin: 2rem; }
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    z-index: 50;
+    transition: opacity 0.2s;
+  }
+  .drawer-overlay.active { display: block; opacity: 1; }
+
+  .drawer {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    transition: bottom 0.3s ease-out;
+    overflow: hidden;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+  }
+  .drawer.active { bottom: 0; }
+
+  .drawer-handle {
+    width: 100px;
+    height: 8px;
+    background: #d1d5db;
+    border-radius: 9999px;
+    margin: 8px auto 16px;
+  }
+
+  .drawer-header, .drawer-footer {
+    padding: 1rem;
+  }
+  .drawer-header { text-align: center; }
+  .drawer-title { font-size: 1.125rem; font-weight: 600; }
+  .drawer-description { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; }
+</style>
+</head>
+<body>
+
+<button id="openDrawerBtn">Open Drawer</button>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-header">
+    <h2 class="drawer-title">Drawer Title</h2>
+    <p class="drawer-description">This is the drawer description.</p>
+  </div>
+  <div class="drawer-content">
+    <p>Drawer content goes here. You can place any HTML inside.</p>
+  </div>
+  <div class="drawer-footer">
+    <button id="closeDrawerBtn">Close</button>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById('openDrawerBtn');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawerOverlay');
+  const closeBtn = document.getElementById('closeDrawerBtn');
+
+  function openDrawer() {
+    drawer.classList.add('active');
+    overlay.classList.add('active');
+  }
+  function closeDrawer() {
+    drawer.classList.remove('active');
+    overlay.classList.remove('active');
+  }
+
+  openBtn.addEventListener('click', openDrawer);
+  closeBtn.addEventListener('click', closeDrawer);
+  overlay.addEventListener('click', closeDrawer);
+</script>
+
+</body>
+</html>
