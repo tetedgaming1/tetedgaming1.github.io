@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static Chart</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+  .chart-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 2rem auto;
+    position: relative;
+  }
+  .chart-tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    pointer-events: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 10;
+  }
+  .chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .chart-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .chart-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="chart-container">
+  <canvas id="myChart"></canvas>
+  <div id="tooltip" class="chart-tooltip"></div>
+  <div id="legend" class="chart-legend"></div>
+</div>
+
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+  const tooltipEl = document.getElementById('tooltip');
+  const legendEl = document.getElementById('legend');
+
+  const dataConfig = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+    datasets: [
+      { label: 'Sales', data: [120, 150, 180, 200, 170], borderColor: '#3b82f6', backgroundColor: '#bfdbfe', fill: true },
+      { label: 'Revenue', data: [100, 130, 160, 180, 150], borderColor: '#f97316', backgroundColor: '#fed7aa', fill: true }
+    ]
+  };
+
+  const myChart = new Chart(ctx, {
+    type: 'line',
+    data: dataConfig,
+    options: {
+      responsive: true,
+      interaction: { mode: 'nearest', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false } // We'll use custom tooltip
+      },
+      scales: {
+        x: { grid: { color: '#ccc' } },
+        y: { grid: { color: '#ccc' } }
+      }
+    }
+  });
+
+  // Custom tooltip
+  ctx.canvas.addEventListener('mousemove', (event) => {
+    const points = myChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, true);
+    if (points.length === 0) {
+      tooltipEl.style.display = 'none';
+      return;
+    }
+    const point = points[0];
+    const dataset = myChart.data.datasets[point.datasetIndex];
+    const label = myChart.data.labels[point.index];
+    const value = dataset.data[point.index];
+    tooltipEl.innerHTML = `<strong>${dataset.label}</strong>: ${value}<br>${label}`;
+    tooltipEl.style.left = event.offsetX + 10 + 'px';
+    tooltipEl.style.top = event.offsetY + 10 + 'px';
+    tooltipEl.style.display = 'block';
+  });
+
+  ctx.canvas.addEventListener('mouseout', () => {
+    tooltipEl.style.display = 'none';
+  });
+
+  // Custom legend
+  dataConfig.datasets.forEach(ds => {
+    const item = document.createElement('div');
+    item.className = 'chart-legend-item';
+    const colorBox = document.createElement('div');
+    colorBox.className = 'chart-legend-color';
+    colorBox.style.backgroundColor = ds.borderColor;
+    item.appendChild(colorBox);
+    const labelText = document.createElement('span');
+    labelText.textContent = ds.label;
+    item.appendChild(labelText);
+    legendEl.appendChild(item);
+  });
+</script>
+
+</body>
+</html>
