@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Static Context Menu</title>
+<style>
+  body { font-family: sans-serif; margin: 2rem; }
+  .context-menu {
+    position: absolute;
+    display: none;
+    min-width: 180px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 0.25rem 0;
+    z-index: 1000;
+  }
+  .context-menu li {
+    list-style: none;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 0.5rem;
+  }
+  .context-menu li:hover {
+    background-color: #3b82f6;
+    color: white;
+  }
+  .context-menu li.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .context-menu .submenu {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    margin-left: 0.25rem;
+  }
+  .context-menu li.has-submenu:hover > .submenu {
+    display: block;
+  }
+  .context-menu .checkmark, .context-menu .radio {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+  }
+  .context-menu .checkmark::after {
+    content: '✔';
+    display: none;
+  }
+  .context-menu li.checked .checkmark::after {
+    display: inline-block;
+    color: #3b82f6;
+  }
+  .context-menu .radio::after {
+    content: '●';
+    display: none;
+    font-size: 0.8rem;
+    color: #3b82f6;
+  }
+  .context-menu li.radio-selected .radio::after {
+    display: inline-block;
+  }
+  .context-menu-separator {
+    height: 1px;
+    margin: 0.25rem 0;
+    background: #d1d5db;
+  }
+</style>
+</head>
+<body>
+
+<button id="menuBtn">Right Click Me</button>
+
+<ul class="context-menu" id="contextMenu">
+  <li class="has-submenu">File
+    <ul class="submenu">
+      <li>New</li>
+      <li>Open</li>
+      <li>Save</li>
+    </ul>
+  </li>
+  <li class="checked"><span class="checkmark"></span> Show Grid</li>
+  <li class="radio-selected"><span class="radio"></span> Light Theme</li>
+  <li><span class="radio"></span> Dark Theme</li>
+  <li class="context-menu-separator"></li>
+  <li class="disabled">Disabled Item</li>
+</ul>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('contextMenu');
+
+  document.addEventListener('contextmenu', (e) => {
+    if(e.target === menuBtn) {
+      e.preventDefault();
+      menu.style.display = 'block';
+      menu.style.left = e.pageX + 'px';
+      menu.style.top = e.pageY + 'px';
+    } else {
+      menu.style.display = 'none';
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if(!menu.contains(e.target)) {
+      menu.style.display = 'none';
+    }
+  });
+
+  // Toggle checkboxes
+  menu.querySelectorAll('li.checked').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('checked');
+    });
+  });
+
+  // Toggle radio selection
+  const radioItems = Array.from(menu.querySelectorAll('li .radio')).map(r => r.parentElement);
+  radioItems.forEach(item => {
+    item.addEventListener('click', () => {
+      radioItems.forEach(r => r.classList.remove('radio-selected'));
+      item.classList.add('radio-selected');
+    });
+  });
+</script>
+
+</body>
+</html>
