@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Towny Sync</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide-react@0.276.0/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-slate-50 p-6">
+<div id="root"></div>
+
+<script type="text/babel">
+
+const { useState } = React;
+const { RefreshCw, Terminal, CheckCircle2, AlertCircle, Loader2, Info } = lucideReact;
+
+function Sync() {
+  const [rawInput, setRawInput] = useState('');
+  const [result, setResult] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleSync = () => {
+    if(!rawInput.trim()) return alert('Paste some Towny output first!');
+    setIsProcessing(true);
+
+    // Simulate parsing
+    setTimeout(() => {
+      const parsed = {
+        towns: [
+          { name:'Ironhaven', mayor:'KingCraft_42', status:'capital' },
+          { name:'Oakdale', mayor:'MayorOak', status:'active' }
+        ],
+        citizens: [
+          { username:'KingCraft_42', town:'Ironhaven', role:'leader' },
+          { username:'CraftQueen', town:'Ironhaven', role:'citizen' }
+        ]
+      };
+      setResult({
+        success:true,
+        townsCreated:2,
+        townsUpdated:0,
+        citizensCreated:2,
+        citizensUpdated:0,
+        parsed
+      });
+      setIsProcessing(false);
+    }, 1000);
+  };
+
+  return (
+    <div className="space-y-6 max-w-3xl">
+      <h1 className="text-3xl font-bold">Towny Sync</h1>
+      <textarea
+        className="w-full border rounded p-2 min-h-[150px] font-mono"
+        placeholder="Paste /nation, /town, /res output here..."
+        value={rawInput}
+        onChange={e=>setRawInput(e.target.value)}
+      />
+      <button onClick={handleSync} className="bg-blue-500 text-white px-3 py-1 rounded flex items-center gap-2">
+        {isProcessing ? <><Loader2 className="w-4 h-4 animate-spin"/> Syncing...</> : <><RefreshCw className="w-4 h-4"/> Sync Now</>}
+      </button>
+
+      {result && (
+        <div className="border p-4 rounded mt-4">
+          <div className="flex items-center gap-2 mb-2">
+            {result.success ? <CheckCircle2 className="w-5 h-5 text-green-600"/> : <AlertCircle className="w-5 h-5 text-red-600"/>}
+            <span className="font-semibold">{result.success ? 'Sync Successful' : 'Sync Failed'}</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <div>Towns Created: {result.townsCreated}</div>
+            <div>Towns Updated: {result.townsUpdated}</div>
+            <div>Citizens Created: {result.citizensCreated}</div>
+            <div>Citizens Updated: {result.citizensUpdated}</div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mt-2">Towns Detected</h3>
+            <div className="flex gap-2 flex-wrap">
+              {result.parsed.towns.map(t=><span key={t.name} className="px-2 py-1 border rounded text-xs">{t.status==='capital'?'👑 ':''}{t.name}·{t.mayor}</span>)}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mt-2">Citizens Detected</h3>
+            <div className="flex gap-2 flex-wrap">
+              {result.parsed.citizens.map(c=><span key={c.username} className="px-2 py-1 border rounded text-xs">{c.username}·{c.town}</span>)}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<Sync/>);
+
+</script>
+</body>
+</html>
