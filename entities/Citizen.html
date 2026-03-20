@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Citizen Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Citizen Form</h1>
+  <form id="citizenForm">
+    <label for="username">Username *</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="town">Town *</label>
+    <input type="text" id="town" name="town" required>
+
+    <label for="role">Role</label>
+    <select id="role" name="role">
+      <option value="leader">Leader</option>
+      <option value="councilor">Councilor</option>
+      <option value="general">General</option>
+      <option value="builder">Builder</option>
+      <option value="diplomat">Diplomat</option>
+      <option value="citizen" selected>Citizen</option>
+    </select>
+
+    <label for="rank">Rank</label>
+    <input type="text" id="rank" name="rank">
+
+    <label for="joined_date">Joined Date</label>
+    <input type="date" id="joined_date" name="joined_date">
+
+    <label for="is_online">Online Status</label>
+    <select id="is_online" name="is_online">
+      <option value="true">Online</option>
+      <option value="false" selected>Offline</option>
+    </select>
+
+    <label for="notes">Notes</label>
+    <textarea id="notes" name="notes" rows="4"></textarea>
+
+    <button type="submit">Save Citizen</button>
+  </form>
+
+  <h2>Saved Data:</h2>
+  <pre id="output">{}</pre>
+
+  <script>
+    const form = document.getElementById('citizenForm');
+    const output = document.getElementById('output');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const citizen = {
+        username: form.username.value.trim(),
+        town: form.town.value.trim(),
+        role: form.role.value,
+        rank: form.rank.value.trim(),
+        joined_date: form.joined_date.value,
+        is_online: form.is_online.value === 'true',
+        notes: form.notes.value.trim()
+      };
+
+      output.textContent = JSON.stringify(citizen, null, 2);
+    });
+  </script>
+</body>
+</html>
