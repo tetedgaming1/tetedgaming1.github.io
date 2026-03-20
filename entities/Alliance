@@ -1,0 +1,47 @@
+{
+  "name": "Alliance",
+  "type": "object",
+  "properties": {
+    "nation_name": {
+      "type": "string",
+      "description": "Name of the other nation"
+    },
+    "relation": {
+      "type": "string",
+      "enum": [
+        "ally",
+        "enemy",
+        "neutral",
+        "trade_partner",
+        "vassal",
+        "overlord"
+      ],
+      "default": "neutral"
+    },
+    "treaty_name": {
+      "type": "string",
+      "description": "Name of the treaty or agreement"
+    },
+    "details": {
+      "type": "string",
+      "description": "Details about the diplomatic relationship"
+    },
+    "signed_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "broken"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "nation_name",
+    "relation"
+  ]
+}
