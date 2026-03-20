@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stat Card</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 20px;
+      border-radius: 16px;
+      background: #1e293b;
+      width: 250px;
+      margin: 10px;
+    }
+
+    .accent {
+      border: 2px solid #38bdf8;
+    }
+
+    .circle {
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .label {
+      font-size: 12px;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+
+    .value {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .accent-text {
+      color: #38bdf8;
+    }
+
+    .trend {
+      font-size: 12px;
+      color: #38bdf8;
+      margin-top: 5px;
+    }
+
+    .icon-box {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Stat Card Demo</h2>
+
+<div id="app"></div>
+
+<script>
+function createStatCard({ label, value, trend, accent = false }) {
+  const card = document.createElement("div");
+  card.className = "card" + (accent ? " accent" : "");
+
+  card.innerHTML = `
+    <div class="circle"></div>
+    <div class="row">
+      <div>
+        <div class="label">${label}</div>
+        <div class="value ${accent ? "accent-text" : ""}">${value}</div>
+        ${trend ? `<div class="trend">${trend}</div>` : ""}
+      </div>
+      <div class="icon-box">📊</div>
+    </div>
+  `;
+
+  return card;
+}
+
+// Example usage
+const app = document.getElementById("app");
+
+app.appendChild(createStatCard({
+  label: "Population",
+  value: "67M",
+  trend: "+1.2%",
+  accent: true
+}));
+
+app.appendChild(createStatCard({
+  label: "GDP",
+  value: "$3T"
+}));
+</script>
+
+</body>
+</html>
