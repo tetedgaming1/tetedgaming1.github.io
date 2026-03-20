@@ -1,0 +1,47 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "income",
+        "expense"
+      ],
+      "description": "Transaction type"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "tax",
+        "trade",
+        "war_reparations",
+        "donation",
+        "construction",
+        "military",
+        "diplomacy",
+        "other"
+      ],
+      "default": "other"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount in gold/currency"
+    },
+    "description": {
+      "type": "string"
+    },
+    "related_town": {
+      "type": "string",
+      "description": "Town involved if applicable"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "type",
+    "amount"
+  ]
+}
