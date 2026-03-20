@@ -1,0 +1,55 @@
+{
+  "name": "Town",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the town"
+    },
+    "mayor": {
+      "type": "string",
+      "description": "Minecraft username of the mayor"
+    },
+    "population": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of residents"
+    },
+    "chunks_claimed": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of chunks claimed"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Town treasury balance"
+    },
+    "tax_rate": {
+      "type": "number",
+      "default": 0,
+      "description": "Daily tax rate per resident"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "capital"
+      ],
+      "default": "active"
+    },
+    "coordinates": {
+      "type": "string",
+      "description": "Town spawn coordinates (x, y, z)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Town description or motto"
+    }
+  },
+  "required": [
+    "name",
+    "mayor"
+  ]
+}
