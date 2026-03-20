@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanilla JS Toaster</title>
+<style>
+  body {
+    font-family: sans-serif;
+    padding: 2rem;
+    background-color: #f9fafb;
+  }
+
+  .toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    z-index: 1000;
+    max-width: 420px;
+  }
+
+  .toast {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem 1.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slide-in 0.3s forwards;
+    position: relative;
+    min-width: 200px;
+  }
+
+  .toast.destructive {
+    border-color: #f87171;
+    background-color: #f87171;
+    color: #fff;
+  }
+
+  .toast-title {
+    font-weight: 600;
+  }
+
+  .toast-description {
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+
+  .toast-close {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: transparent;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  .toast-close:hover {
+    opacity: 1;
+  }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes slide-out {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(100%); }
+  }
+</style>
+</head>
+<body>
+
+<h2>Dynamic Toaster Example</h2>
+<button onclick="addToast('Hello!', 'This is a dynamic toast')">Show Toast</button>
+<button onclick="addToast('Error!', 'Something went wrong', true)">Show Destructive Toast</button>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+  const toastContainer = document.getElementById('toast-container');
+
+  const toasts = []; // mimics useToast() state
+
+  function addToast(title, description, destructive = false, duration = 3000) {
+    const id = Date.now(); // simple unique id
+    const toastData = { id, title, description, destructive };
+    toasts.push(toastData);
+
+    renderToasts();
+
+    // Auto-remove after duration
+    setTimeout(() => removeToast(id), duration);
+  }
+
+  function removeToast(id) {
+    const index = toasts.findIndex(t => t.id === id);
+    if (index !== -1) {
+      const toastEl = document.getElementById(`toast-${id}`);
+      if (toastEl) {
+        toastEl.style.animation = 'slide-out 0.3s forwards';
+        toastEl.addEventListener('animationend', () => toastEl.remove());
+      }
+      toasts.splice(index, 1);
+    }
+  }
+
+  function renderToasts() {
+    toastContainer.innerHTML = '';
+    toasts.forEach(({ id, title, description, destructive }) => {
+      const toastEl = document.createElement('div');
+      toastEl.id = `toast-${id}`;
+      toastEl.className = 'toast' + (destructive ? ' destructive' : '');
+
+      toastEl.innerHTML = `
+        <div>
+          ${title ? `<div class="toast-title">${title}</div>` : ''}
+          ${description ? `<div class="toast-description">${description}</div>` : ''}
+        </div>
+        <button class="toast-close" onclick="removeToast(${id})">✕</button>
+      `;
+
+      toastContainer.appendChild(toastEl);
+    });
+  }
+</script>
+
+</body>
+</html>
