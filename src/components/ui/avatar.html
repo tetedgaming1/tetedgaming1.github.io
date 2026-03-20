@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avatar Example</title>
+  <style>
+    .avatar {
+      position: relative;
+      display: flex;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #e0e0e0; /* fallback color */
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Avatar Example</h1>
+
+  <!-- Avatar with image -->
+  <div class="avatar" id="avatar1">
+    <img src="https://via.placeholder.com/150" alt="User Avatar" onerror="this.style.display='none'; document.getElementById('fallback1').style.display='flex'">
+    <span class="avatar-fallback" id="fallback1" style="display:none;">JD</span>
+  </div>
+
+  <!-- Avatar with no image (fallback shown) -->
+  <div class="avatar" id="avatar2">
+    <img src="invalid-image.jpg" alt="User Avatar" onerror="this.style.display='none'; document.getElementById('fallback2').style.display='flex'">
+    <span class="avatar-fallback" id="fallback2">AB</span>
+  </div>
+
+</body>
+</html>
