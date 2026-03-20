@@ -1,93 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Law Form</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
+{
+  "name": "Law",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the law or announcement"
+    },
+    "content": {
+      "type": "string",
+      "description": "Full text of the law or announcement"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "law",
+        "decree",
+        "announcement",
+        "guideline"
+      ],
+      "default": "law"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "repealed",
+        "draft"
+      ],
+      "default": "active"
+    },
+    "enacted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who wrote this"
     }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    pre {
-      background: #f4f4f4;
-      padding: 10px;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Law Form</h1>
-  <form id="lawForm">
-    <label for="title">Title *</label>
-    <input type="text" id="title" name="title" required>
-
-    <label for="content">Content *</label>
-    <textarea id="content" name="content" rows="5" required></textarea>
-
-    <label for="type">Type</label>
-    <select id="type" name="type">
-      <option value="law" selected>Law</option>
-      <option value="decree">Decree</option>
-      <option value="announcement">Announcement</option>
-      <option value="guideline">Guideline</option>
-    </select>
-
-    <label for="status">Status</label>
-    <select id="status" name="status">
-      <option value="active" selected>Active</option>
-      <option value="repealed">Repealed</option>
-      <option value="draft">Draft</option>
-    </select>
-
-    <label for="enacted_date">Enacted Date</label>
-    <input type="date" id="enacted_date" name="enacted_date">
-
-    <label for="author">Author</label>
-    <input type="text" id="author" name="author">
-
-    <button type="submit">Save Law</button>
-  </form>
-
-  <h2>Saved Data:</h2>
-  <pre id="output">{}</pre>
-
-  <script>
-    const form = document.getElementById('lawForm');
-    const output = document.getElementById('output');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const law = {
-        title: form.title.value.trim(),
-        content: form.content.value.trim(),
-        type: form.type.value,
-        status: form.status.value,
-        enacted_date: form.enacted_date.value,
-        author: form.author.value.trim()
-      };
-
-      output.textContent = JSON.stringify(law, null, 2);
-    });
-  </script>
-</body>
-</html>
+  },
+  "required": [
+    "title",
+    "content"
+  ]
+}
